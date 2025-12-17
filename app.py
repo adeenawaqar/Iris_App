@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 
-st.title("Iris Species Classifier")
+st.title("🌼Iris Species Classifier")
 
 # Input features
 sepal_length = st.number_input('Sepal Length', min_value=0.0, value=5.1)
@@ -20,3 +20,4 @@ def classify_iris(sl, sw, pl, pw):
 if st.button('Classify'):
     species = classify_iris(sepal_length, sepal_width, petal_length, petal_width)
     st.success(f"Predicted Species: {species}")
+
