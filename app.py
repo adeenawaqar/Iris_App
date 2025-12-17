@@ -1,23 +1,31 @@
 import streamlit as st
 import numpy as np
 
-st.title("🌼Iris Species Classifier")
+st.title("Iris Species Classifier")
 
-# Input features
-sepal_length = st.number_input('Sepal Length', min_value=0.0, value=5.1)
-sepal_width  = st.number_input('Sepal Width', min_value=0.0, value=3.5)
-petal_length = st.number_input('Petal Length', min_value=0.0, value=1.4)
-petal_width  = st.number_input('Petal Width', min_value=0.0, value=0.2)
 
-def classify_iris(sl, sw, pl, pw):
-    if pl < 2.5:
+input_list = st.text_input("Enter 4 numbers (Sepal Length, Sepal Width, Petal Length, Petal Width) , "")
+
+def classify_iris(features):
+    sl, sw, pl, pw = features
+    # Simple multi-feature rule
+    if pl < 2.5 and pw < 1.0:
         return 'setosa'
-    elif pl < 5.0:
+    elif pl < 5.0 and pw < 1.8:
         return 'versicolor'
     else:
         return 'virginica'
 
-if st.button('Classify'):
-    species = classify_iris(sepal_length, sepal_width, petal_length, petal_width)
-    st.success(f"Predicted Species: {species}")
+if st.button("Classify"):
+    try:
+
+        features = [float(x.strip()) for x in input_list.split(",")]
+        if len(features) != 4:
+            st.error("Please enter exactly 4 numbers!")
+        else:
+            species = classify_iris(features)
+            st.success(f"Predicted Species: {species}")
+    except:
+        st.error("Invalid input! Make sure to enter numbers separated by commas.")
+
 
