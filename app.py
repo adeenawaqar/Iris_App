@@ -1,34 +1,22 @@
-# Import libraries
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.utils import to_categorical
+import streamlit as st
+import numpy as np
 
-data = pd.read_csv('/kaggle/input/iris-dataset/iris.csv')
+st.title("Iris Species Classifier")
 
-X = data.drop('species', axis=1)  # Assuming 'species' is the target column
-y = data['species']
+# Input features
+sepal_length = st.number_input('Sepal Length', min_value=0.0, value=5.1)
+sepal_width  = st.number_input('Sepal Width', min_value=0.0, value=3.5)
+petal_length = st.number_input('Petal Length', min_value=0.0, value=1.4)
+petal_width  = st.number_input('Petal Width', min_value=0.0, value=0.2)
 
-encoder = LabelEncoder()
-y_encoded = encoder.fit_transform(y)
+def classify_iris(sl, sw, pl, pw):
+    if pl < 2.5:
+        return 'setosa'
+    elif pl < 5.0:
+        return 'versicolor'
+    else:
+        return 'virginica'
 
-y_categorical = to_categorical(y_encoded)
-
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_categorical, test_size=0.2, random_state=42)
-
-model = Sequential()
-model.add(Dense(10, input_shape=(X_train.shape[1],), activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(3, activation='softmax'))  # 3 output classes
-
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-
-history = model.fit(X_train, y_train, epochs=50, batch_size=5, validation_split=0.1)
-
-loss, accuracy = model.evaluate(X_test, y_test)
-print(f"Test Accuracy: {accuracy*100:.2f}%")
+if st.button('Classify'):
+    species = classify_iris(sepal_length, sepal_width, petal_length, petal_width)
+    st.success(f"Predicted Species: {species}")
